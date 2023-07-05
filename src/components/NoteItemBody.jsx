@@ -1,6 +1,7 @@
 import React from 'react';
-import { Link } from "react-router-dom";
-import PropTypes from "prop-types";
+import { Link } from 'react-router-dom';
+import PropTypes from 'prop-types';
+import parser from 'html-react-parser';
  
 function NoteItemBody({ title, date, body, id }) {
  return (
@@ -9,7 +10,7 @@ function NoteItemBody({ title, date, body, id }) {
      <Link to={`/notes/${id}`} style={{textDecoration: 'none'}}>{title}</Link>
      </h3>
      <p className='note-item__date'>{date}</p>
-     <p className='note-item__body'>{body}</p>
+     <p className='note-item__body'>{parser(body)}</p>
    </div>
  );
 }

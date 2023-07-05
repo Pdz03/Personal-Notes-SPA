@@ -5,6 +5,7 @@ import Navigation from './components/Navigation';
 import HomePageWrapper from './pages/HomePage';
 import DetailPage from './pages/DetailPage';
 import ArchivePageWrapper from './pages/ArchivePage';
+import NoteFoundPage from './pages/NotFoundPage';
 
 function App() {
   return (
@@ -19,6 +20,7 @@ function App() {
           <Route path="/archives" element={<ArchivePageWrapper />} />
           <Route path="/notes/new" element={<AddPage />} />
           <Route path="/notes/:id" element={<DetailPage />} />
+          <Route path="*" element={<NoteFoundPage />} />
       </Routes>
       </main>
     </div>

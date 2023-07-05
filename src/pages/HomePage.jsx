@@ -3,6 +3,8 @@ import NoteList from '../components/NoteList';
 import { useSearchParams } from 'react-router-dom';
 import { getActiveNotes } from '../utils/local-data';
 import SearchBar from '../components/SearchBar';
+import AddButton from '../components/AddButton';
+import PropTypes from 'prop-types';
 
 function HomePageWrapper() {
     const [searchParams, setSearchParams] = useSearchParams();
@@ -52,9 +54,17 @@ class HomePage extends React.Component {
         <NoteList notes={noteList} />
         :<p className='notes-list-empty'>Tidak ada catatan</p>
       }
+      <div className='homepage__action'>
+      <AddButton />
+      </div>
       </section>
     )
   }
 }
+
+HomePage.propTypes = {
+  keyword: PropTypes.string.isRequired,
+  keywordChange: PropTypes.func.isRequired,
+};
  
 export default HomePageWrapper;

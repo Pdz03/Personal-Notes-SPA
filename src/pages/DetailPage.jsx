@@ -1,11 +1,11 @@
-import React from "react";
-import { useNavigate, useParams } from "react-router-dom";
-import PropTypes from "prop-types";
-import Detail from "../components/Detail";
-import { getNote, deleteNote, archiveNote, unarchiveNote } from "../utils/local-data";
+import React from 'react';
+import { useNavigate, useParams } from 'react-router-dom';
+import PropTypes from 'prop-types';
+import Detail from '../components/Detail';
+import { getNote, deleteNote, archiveNote, unarchiveNote } from '../utils/local-data';
 import Swal from 'sweetalert2';
 import autoBind from 'auto-bind';
-// import NoteDetailEmpty from "../components/DetailNote/NoteDetailEmpty";
+// import NoteDetailEmpty from '../components/DetailNote/NoteDetailEmpty';
 
 function DetailPageWrapper() {
   const { id } = useParams();
@@ -37,7 +37,7 @@ class DetailPage extends React.Component {
   async onDeleteHandler(id) {
     await Swal.fire({
       title: 'Apakah anda yakin?',
-      text: "Anda akan menghapus catatan ini!",
+      text: 'Anda akan menghapus catatan ini!',
       icon: 'warning',
       showCancelButton: true,
       confirmButtonColor: '#3085d6',
@@ -47,7 +47,7 @@ class DetailPage extends React.Component {
     }).then((result) => {
       if (result.isConfirmed) {
         deleteNote(id);
-        this.props.navigate("/");
+        this.props.navigate('/');
         Swal.fire(
           'Deleted!',
           'Catatan telah terhapus.',
@@ -60,7 +60,7 @@ class DetailPage extends React.Component {
   async onArchiveHandler(id) {
     await Swal.fire({
       title: 'Apakah anda yakin?',
-      text: "Anda akan mengarsipkan catatan ini!",
+      text: 'Anda akan mengarsipkan catatan ini!',
       icon: 'warning',
       showCancelButton: true,
       confirmButtonColor: '#3085d6',
@@ -70,7 +70,7 @@ class DetailPage extends React.Component {
     }).then((result) => {
       if (result.isConfirmed) {
         archiveNote(id);
-        this.props.navigate("/archives");
+        this.props.navigate('/archives');
         Swal.fire(
           'Archived!',
           'Catatan anda telah diarsipkan',
@@ -83,7 +83,7 @@ class DetailPage extends React.Component {
   async onUnarchiveHandler(id) {
     await Swal.fire({
       title: 'Apakah anda yakin?',
-      text: "Anda akan membuka arsip catatan ini!",
+      text: 'Anda akan membuka arsip catatan ini!',
       icon: 'warning',
       showCancelButton: true,
       confirmButtonColor: '#3085d6',
@@ -93,7 +93,7 @@ class DetailPage extends React.Component {
     }).then((result) => {
       if (result.isConfirmed) {
         unarchiveNote(id);
-        this.props.navigate("/");
+        this.props.navigate('/');
         Swal.fire(
           'Actived!',
           'Arsip catatan anda telah terbuka',
