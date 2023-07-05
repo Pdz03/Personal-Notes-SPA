@@ -9,6 +9,8 @@ function NoteList({ notes, onDelete, onArchive }) {
           <NoteItem 
           key={note.id}
           id={note.id}
+          onArchive={onArchive}
+          isArchive={note.archived}
           {...note} />
         ))
       }
