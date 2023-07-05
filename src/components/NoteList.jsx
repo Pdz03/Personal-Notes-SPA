@@ -1,7 +1,7 @@
 import React from 'react';
 import NoteItem from './NoteItem';
  
-function NoteList({ notes, onDelete, onArchive }) {
+function NoteList({ notes }) {
   return (
     <div className='notes-list'>
       {
@@ -9,8 +9,7 @@ function NoteList({ notes, onDelete, onArchive }) {
           <NoteItem 
           key={note.id}
           id={note.id}
-          onArchive={onArchive}
-          isArchive={note.archived}
+          archived={note.archived}
           {...note} />
         ))
       }

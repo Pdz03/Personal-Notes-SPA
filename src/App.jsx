@@ -4,6 +4,7 @@ import AddPage from './pages/AddPage';
 import Navigation from './components/Navigation';
 import HomePageWrapper from './pages/HomePage';
 import DetailPage from './pages/DetailPage';
+import ArchivePageWrapper from './pages/ArchivePage';
 
 function App() {
   return (
@@ -15,6 +16,7 @@ function App() {
       <main>
       <Routes>
           <Route path="/" element={<HomePageWrapper />} />
+          <Route path="/archives" element={<ArchivePageWrapper />} />
           <Route path="/notes/new" element={<AddPage />} />
           <Route path="/notes/:id" element={<DetailPage />} />
       </Routes>

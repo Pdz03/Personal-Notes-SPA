@@ -1,25 +1,25 @@
 import React from 'react';
 import NoteList from '../components/NoteList';
 import { useSearchParams } from 'react-router-dom';
-import { getActiveNotes } from '../utils/local-data';
+import { getArchivedNotes } from '../utils/local-data';
 import SearchBar from '../components/SearchBar';
 
-function HomePageWrapper() {
+function ArchivePageWrapper() {
     const [searchParams, setSearchParams] = useSearchParams();
     const keyword = searchParams.get('keyword');
     function changeSearchParams(keyword) {
       setSearchParams({ keyword });
     }
    
-    return <HomePage defaultKeyword={keyword} keywordChange={changeSearchParams} />
+    return <ArchivePage defaultKeyword={keyword} keywordChange={changeSearchParams} />
   }
  
-class HomePage extends React.Component {
+class ArchivePage extends React.Component {
   constructor(props) {
     super(props);
  
     this.state = {
-        notes: getActiveNotes(),
+        notes: getArchivedNotes(),
         keyword: props.defaultKeyword || '',
       }
     this.onKeywordChangeHandler = this.onKeywordChangeHandler.bind(this);
@@ -46,7 +46,7 @@ class HomePage extends React.Component {
       
     return (
       <section>
-        <h2>Daftar Catatan Aktif</h2>
+        <h2>Daftar Arsip Catatan</h2>
         <SearchBar keyword={this.state.keyword} keywordChange={this.onKeywordChangeHandler} />
         {noteList.length > 0 ? 
         <NoteList notes={noteList} />
@@ -57,4 +57,4 @@ class HomePage extends React.Component {
   }
 }
  
-export default HomePageWrapper;
+export default ArchivePageWrapper;

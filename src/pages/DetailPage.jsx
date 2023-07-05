@@ -2,7 +2,7 @@ import React from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import PropTypes from "prop-types";
 import Detail from "../components/Detail";
-import { getNote, deleteNote } from "../utils/local-data";
+import { getNote, deleteNote, archiveNote, unarchiveNote } from "../utils/local-data";
 import Swal from 'sweetalert2';
 import autoBind from 'auto-bind';
 // import NoteDetailEmpty from "../components/DetailNote/NoteDetailEmpty";
@@ -46,13 +46,13 @@ class DetailPage extends React.Component {
       confirmButtonText: 'Ya, hapus!'
     }).then((result) => {
       if (result.isConfirmed) {
+        deleteNote(id);
+        this.props.navigate("/");
         Swal.fire(
           'Deleted!',
           'Catatan telah terhapus.',
           'success'
         )
-        deleteNote(id);
-        this.props.navigate("/");
       }
     })
   }
@@ -69,13 +69,36 @@ class DetailPage extends React.Component {
       confirmButtonText: 'Ya, arsipkan!'
     }).then((result) => {
       if (result.isConfirmed) {
+        archiveNote(id);
+        this.props.navigate("/archives");
         Swal.fire(
-          'Deleted!',
+          'Archived!',
           'Catatan anda telah diarsipkan',
           'success'
         )
-        ArchiveNote(id);
+      }
+    })
+  }
+
+  async onUnarchiveHandler(id) {
+    await Swal.fire({
+      title: 'Apakah anda yakin?',
+      text: "Anda akan membuka arsip catatan ini!",
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonColor: '#3085d6',
+      cancelButtonColor: '#d33',
+      cancelButtonText: 'Batal',
+      confirmButtonText: 'Ya, buka arsip!'
+    }).then((result) => {
+      if (result.isConfirmed) {
+        unarchiveNote(id);
         this.props.navigate("/");
+        Swal.fire(
+          'Actived!',
+          'Arsip catatan anda telah terbuka',
+          'success'
+        )
       }
     })
   }
@@ -84,13 +107,10 @@ class DetailPage extends React.Component {
     if (this.state.initializing) {
       return null;
     }
-    // if (!this.state.note) {
-    //   return <NoteDetailEmpty />;
-    // }
     
     return (
       <section>
-        <Detail {...this.state.note} onDelete={this.onDeleteHandler} onArchive={this.onArchiveHandler} />
+        <Detail {...this.state.note} onDelete={this.onDeleteHandler} onArchive={this.onArchiveHandler} onUnarchive={this.onUnarchiveHandler}/>
       </section>
     );
   }
