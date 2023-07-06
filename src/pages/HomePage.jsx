@@ -8,7 +8,7 @@ import PropTypes from 'prop-types';
 
 function HomePageWrapper() {
     const [searchParams, setSearchParams] = useSearchParams();
-    const keyword = searchParams.get('keyword');
+    const keyword = searchParams.get('keyword') || '';
     function changeSearchParams(keyword) {
       setSearchParams({ keyword });
     }
@@ -63,7 +63,7 @@ class HomePage extends React.Component {
 }
 
 HomePage.propTypes = {
-  keyword: PropTypes.string.isRequired,
+  defaultKeyword: PropTypes.string.isRequired,
   keywordChange: PropTypes.func.isRequired,
 };
  

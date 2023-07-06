@@ -7,7 +7,7 @@ import PropTypes from 'prop-types';
 
 function ArchivePageWrapper() {
     const [searchParams, setSearchParams] = useSearchParams();
-    const keyword = searchParams.get('keyword');
+    const keyword = searchParams.get('keyword') || '';
     function changeSearchParams(keyword) {
       setSearchParams({ keyword });
     }
@@ -59,7 +59,7 @@ class ArchivePage extends React.Component {
 }
 
 ArchivePage.propTypes = {
-  keyword: PropTypes.string.isRequired,
+  defaultKeyword: PropTypes.string.isRequired,
   keywordChange: PropTypes.func.isRequired,
 };
  
