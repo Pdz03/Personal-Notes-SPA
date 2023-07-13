@@ -2,7 +2,7 @@ import React from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import PropTypes from 'prop-types';
 import Detail from '../components/Detail';
-import { getNote, deleteNote, archiveNote, unarchiveNote } from '../utils/local-data';
+import { getNote, deleteNote, archiveNote, unarchiveNote } from '../utils/network-data';
 import Swal from 'sweetalert2';
 import autoBind from 'auto-bind';
 // import NoteDetailEmpty from '../components/DetailNote/NoteDetailEmpty';

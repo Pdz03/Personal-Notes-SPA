@@ -1,7 +1,7 @@
 import React from 'react';
 import NoteList from '../components/NoteList';
 import { useSearchParams } from 'react-router-dom';
-import { getArchivedNotes } from '../utils/local-data';
+import { getArchivedNotes } from '../utils/network-data';
 import SearchBar from '../components/SearchBar';
 import PropTypes from 'prop-types';
 

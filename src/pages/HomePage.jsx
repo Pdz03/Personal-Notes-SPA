@@ -1,70 +1,53 @@
 import React from 'react';
 import NoteList from '../components/NoteList';
 import { useSearchParams } from 'react-router-dom';
-import { getActiveNotes } from '../utils/local-data';
+import { getActiveNotes } from '../utils/network-data';
 import SearchBar from '../components/SearchBar';
 import AddButton from '../components/AddButton';
 import PropTypes from 'prop-types';
 
-function HomePageWrapper() {
-    const [searchParams, setSearchParams] = useSearchParams();
-    const keyword = searchParams.get('keyword') || '';
-    function changeSearchParams(keyword) {
-      setSearchParams({ keyword });
-    }
-   
-    return <HomePage defaultKeyword={keyword} keywordChange={changeSearchParams} />
-  }
- 
-class HomePage extends React.Component {
-  constructor(props) {
-    super(props);
- 
-    this.state = {
-        notes: getActiveNotes(),
-        keyword: props.defaultKeyword || '',
-      }
-    this.onKeywordChangeHandler = this.onKeywordChangeHandler.bind(this);
-  }
+function HomePage() {
+  const [searchParams, setSearchParams] = useSearchParams();
+  const [notes, setNotes] = React.useState([]);
+  const [keyword, setKeyword] = React.useState(() => {
+    return searchParams.get('keyword') || ''
+  });
 
-
-  onKeywordChangeHandler(keyword) {
-    this.setState(() => {
-      return {
-        keyword,
-      }
+  React.useEffect(() => {
+    getActiveNotes().then(({ data }) => {
+      setNotes(data);
     });
+  }, []);
 
-    this.props.keywordChange(keyword);
+  function onKeywordChangeHandler(keyword) {
+    setKeyword(keyword);
+    setSearchParams({ keyword });
   }
+
+  const filteredNotes = notes.filter((note) => {
+    return note.title.toLowerCase().includes(
+      keyword.toLowerCase()
+    );
+  });
  
-  render() {
-    const notes = this.state.notes;
-    const noteList = notes.filter((note) => {
-        return note.title.toLowerCase().includes(
-          this.state.keyword.toLowerCase()
-        );
-    });
-      
-    return (
+  return (
       <section>
         <h2>Daftar Catatan Aktif</h2>
-        <SearchBar keyword={this.state.keyword} keywordChange={this.onKeywordChangeHandler} />
-        {noteList.length > 0 ? 
-        <NoteList notes={noteList} />
+        <SearchBar keyword={keyword} keywordChange={onKeywordChangeHandler} />
+        {filteredNotes.length > 0 ? 
+        <NoteList notes={filteredNotes} />
         :<p className='notes-list-empty'>Tidak ada catatan</p>
       }
       <div className='homepage__action'>
       <AddButton />
       </div>
       </section>
-    )
-  }
+  );
 }
 
-HomePage.propTypes = {
-  defaultKeyword: PropTypes.string.isRequired,
+SearchBar.propTypes = {
+  keyword: PropTypes.string.isRequired,
   keywordChange: PropTypes.func.isRequired,
 };
  
-export default HomePageWrapper;
+export default HomePage;
