@@ -10,6 +10,7 @@ class RegisterInput extends React.Component {
       name: '',
       email: '',
       password: '',
+      passwordconfirm: '',
     }
  
     autoBind(this);
@@ -38,6 +39,14 @@ class RegisterInput extends React.Component {
       };
     })
   }
+
+  onPasswordConfirm(event) {
+    this.setState(() => {
+      return {
+        passwordconfirm: event.target.value
+      };
+    })
+  }
  
   onSubmitHandler(event) {
     event.preventDefault();
@@ -51,11 +60,16 @@ class RegisterInput extends React.Component {
  
   render() {
     return (
-      <form onSubmit={this.onSubmitHandler} className='register-input'>
+      <form onSubmit={this.onSubmitHandler} className='input-register'>
+        <label htmlFor='nama'>Nama</label>
         <input type="text" placeholder="Nama" value={this.state.name} onChange={this.onNameChange} />
+        <label htmlFor='email'>Email</label>
         <input type="email" placeholder="Email" value={this.state.email} onChange={this.onEmailChange} />
+        <label htmlFor='password'>Password</label>
         <input type="password" placeholder="Password" autoComplete='current-password' value={this.state.password} onChange={this.onPasswordChange} />
-        <button>Register</button>
+        <label htmlFor='password'>Konfirmasi Password</label>
+        <input type="password" placeholder="Konfirmasi Password" autoComplete='current-password' value={this.state.passwordconfirm} onChange={this.onPasswordConfirm} />
+        <button disabled={this.state.password != this.state.passwordconfirm}>Register</button>
       </form>
     )
   }

@@ -4,37 +4,21 @@ import PropTypes from 'prop-types';
 import Detail from '../components/Detail';
 import { getNote, deleteNote, archiveNote, unarchiveNote } from '../utils/network-data';
 import Swal from 'sweetalert2';
-import autoBind from 'auto-bind';
 // import NoteDetailEmpty from '../components/DetailNote/NoteDetailEmpty';
 
-function DetailPageWrapper() {
+function DetailPage (){
   const { id } = useParams();
   const navigate = useNavigate();
-  return <DetailPage id={id} navigate={navigate} />;
-}
+  const [notes, setNote] = React.useState(null);
 
-class DetailPage extends React.Component {
-  constructor(props) {
-    super(props);
+  React.useEffect(() => {
+    (async () => {
+      const { data } = await getNote(id);
+      setNote(data);
+    })();
+  }, [id]);
 
-    this.state = {
-      note: null,
-      initializing: true,
-    };
-    autoBind(this);
-  }
-
-  async componentDidMount() {
-    const data  = await getNote(this.props.id);
-    this.setState(() => {
-      return {
-        note: data,
-        initializing: false,
-      };
-    });
-  }
-
-  async onDeleteHandler(id) {
+  const onDeleteHandler = async(id) => {
     await Swal.fire({
       title: 'Apakah anda yakin?',
       text: 'Anda akan menghapus catatan ini!',
@@ -47,7 +31,7 @@ class DetailPage extends React.Component {
     }).then((result) => {
       if (result.isConfirmed) {
         deleteNote(id);
-        this.props.navigate('/');
+        navigate('/');
         Swal.fire(
           'Deleted!',
           'Catatan telah terhapus.',
@@ -57,7 +41,7 @@ class DetailPage extends React.Component {
     })
   }
 
-  async onArchiveHandler(id) {
+  const onArchiveHandler = async(id) => {
     await Swal.fire({
       title: 'Apakah anda yakin?',
       text: 'Anda akan mengarsipkan catatan ini!',
@@ -70,7 +54,7 @@ class DetailPage extends React.Component {
     }).then((result) => {
       if (result.isConfirmed) {
         archiveNote(id);
-        this.props.navigate('/archives');
+        navigate('/archives');
         Swal.fire(
           'Archived!',
           'Catatan anda telah diarsipkan',
@@ -80,7 +64,7 @@ class DetailPage extends React.Component {
     })
   }
 
-  async onUnarchiveHandler(id) {
+  const onUnarchiveHandler = async(id) => {
     await Swal.fire({
       title: 'Apakah anda yakin?',
       text: 'Anda akan membuka arsip catatan ini!',
@@ -93,7 +77,7 @@ class DetailPage extends React.Component {
     }).then((result) => {
       if (result.isConfirmed) {
         unarchiveNote(id);
-        this.props.navigate('/');
+        navigate('/');
         Swal.fire(
           'Actived!',
           'Arsip catatan anda telah terbuka',
@@ -103,22 +87,59 @@ class DetailPage extends React.Component {
     })
   }
 
-  render() {
-    if (this.state.initializing) {
-      return null;
-    }
-    
-    return (
-      <section>
-        <Detail {...this.state.note} onDelete={this.onDeleteHandler} onArchive={this.onArchiveHandler} onUnarchive={this.onUnarchiveHandler}/>
-      </section>
-    );
-  }
+  return (
+    <section>
+      <Detail {...notes} 
+      onDelete={onDeleteHandler} 
+      onArchive={onArchiveHandler} 
+      onUnarchive={onUnarchiveHandler}/>
+    </section>
+);
 }
+
+// function DetailPageWrapper() {
+//   const { id } = useParams();
+//   const navigate = useNavigate();
+//   return <DetailPage id={id} navigate={navigate} />;
+// }
+
+// class DetailPage extends React.Component {
+//   constructor(props) {
+//     super(props);
+
+//     this.state = {
+//       note: null,
+//       initializing: true,
+//     };
+//     autoBind(this);
+//   }
+
+//   async componentDidMount() {
+//     const data  = await getNote(this.props.id);
+//     this.setState(() => {
+//       return {
+//         note: data,
+//         initializing: false,
+//       };
+//     });
+//   }
+
+//   render() {
+//     if (this.state.initializing) {
+//       return null;
+//     }
+    
+//     return (
+//       <section>
+//         <Detail {...this.state.note} onDelete={this.onDeleteHandler} onArchive={this.onArchiveHandler} onUnarchive={this.onUnarchiveHandler}/>
+//       </section>
+//     );
+//   }
+// }
 
 DetailPage.propTypes = {
   id: PropTypes.string.isRequired,
   navigate: PropTypes.func.isRequired,
 };
 
-export default DetailPageWrapper;
+export default DetailPage;

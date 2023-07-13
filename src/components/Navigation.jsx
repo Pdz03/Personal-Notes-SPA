@@ -3,6 +3,18 @@ import { Link } from 'react-router-dom';
 import { getUserLogged, putAccessToken } from '../utils/network-data';
 import autoBind from 'auto-bind';
 import { FiLogOut } from 'react-icons/fi'
+
+// function Navigation({ logout, name }) {
+//   return (
+//     <nav className="navigation">
+//     <ul>
+//     <li>Tema</li>
+//     <li>Bahasa</li>
+//       <li>{name}<button onClick={logout}> <FiLogOut /></button></li>
+//     </ul>
+//   </nav>
+//   );
+// }
  
 class Navigation extends React.Component {
   constructor(props) {
@@ -92,7 +104,7 @@ class Navigation extends React.Component {
         <li>
           <Link to='/archives' style={{textDecoration:'none'}}>Bahasa</Link>
         </li>
-        <li><button onClick={logout}>{name} <FiLogOut /></button></li>
+        <li>{this.state.authedUser.name} <button onClick={this.onLogout}> <FiLogOut /></button></li>
       </ul>
     </nav>
   );

@@ -1,7 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { Link } from 'react-router-dom';
-// import LoginInput from '../components/LoginInput';
+import LoginInput from '../components/LoginInput';
 import { login } from '../utils/network-data';
  
 function LoginPage({ loginSuccess }) {
@@ -14,8 +14,9 @@ function LoginPage({ loginSuccess }) {
   }
  
   return (
-    <section className='login-page'>
+    <section>
       <h2>Silakan masuk untuk melanjutkan ...</h2>
+      <LoginInput login={onLogin} />
       <p>Belum punya akun? <Link to="/register">Daftar di sini.</Link></p>
     </section>
   );

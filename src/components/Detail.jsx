@@ -12,7 +12,7 @@ function Detail({ id, title, body, createdAt, archived, onDelete, onArchive, onU
       <div className='detail-page'>
         <h2 className='detail-page__title'>{title}</h2>
         <p className='detail-page__createdAt'>{formattedDate}</p>
-        <p className='detail-page__body'>{parser(body)}</p>
+        <p className='detail-page__body'>{body}</p>
         {archived ? 
         <p className='detail-page__status'>Status : Catatan Diarsipkan</p>
         :

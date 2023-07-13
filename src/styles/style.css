@@ -262,7 +262,7 @@ main {
   border-radius: 8px;
   background-color: var(--on-background);
   color: var(--background);
-  cursor: pointer;
+  cursor: none;
 }
 
 .button-logout {
@@ -274,6 +274,11 @@ main {
   font-size: 28px;
   cursor: pointer;
   color: var(--on-background);
+}
+
+button:disabled{
+  cursor:not-allowed;
+  background-color: var(--on-background-grey);
 }
 
 @media screen and (min-width: 650px) {

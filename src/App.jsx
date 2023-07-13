@@ -1,7 +1,6 @@
 import React from 'react';
 import { Route, Routes, Link } from 'react-router-dom';
 import AddPage from './pages/AddPage';
-import Navigation from './components/Navigation';
 import HomePage from './pages/HomePage';
 import DetailPage from './pages/DetailPage';
 import ArchivePageWrapper from './pages/ArchivePage';
@@ -10,6 +9,7 @@ import LoginPage from './pages/LoginPage';
 import RegisterPage from './pages/RegisterPage';
 import { getUserLogged, putAccessToken } from './utils/network-data';
 import autoBind from 'auto-bind';
+import { FiLogOut } from 'react-icons/fi'
 
 class App extends React.Component {
   constructor(props) {
@@ -18,21 +18,21 @@ class App extends React.Component {
     this.state = {
       authedUser: null,
       initializing: true,
-      localeContext: {
-        locale: localStorage.getItem('locale') || 'id',
-        toggleLocale: () => {
-          this.setState((prevState) => {
-            const newLocale = prevState.localeContext.locale === 'id' ? 'en' : 'id';
-            localStorage.setItem('locale', newLocale);
-            return {
-              localeContext: {
-                ...prevState.localeContext,
-                locale: newLocale
-              }
-            }
-          });
-        }
-      }
+      // localeContext: {
+      //   locale: localStorage.getItem('locale') || 'id',
+      //   toggleLocale: () => {
+      //     this.setState((prevState) => {
+      //       const newLocale = prevState.localeContext.locale === 'id' ? 'en' : 'id';
+      //       localStorage.setItem('locale', newLocale);
+      //       return {
+      //         localeContext: {
+      //           ...prevState.localeContext,
+      //           locale: newLocale
+      //         }
+      //       }
+      //     });
+      //   }
+      // }
     };
 
     autoBind(this);
@@ -77,11 +77,20 @@ class App extends React.Component {
         <div className="app-container">
         <header>
         <h1><Link to="/" style={{textDecoration: 'none'}}>Personal Notes Apps</Link></h1>
-        <Navigation />
+        <nav className='navigation'>
+        <ul>
+          <li>
+            <Link to='/archives' style={{textDecoration:'none'}}>Tema</Link>
+          </li>
+          <li>
+            <Link to='/archives' style={{textDecoration:'none'}}>Bahasa</Link>
+          </li>
+        </ul>
+        </nav>
         </header>
         <main>
         <Routes>
-            <Route path="/*" element={<LoginPage />} />
+            <Route path="/*" element={<LoginPage loginSuccess={this.onLoginSuccess} />} />
             <Route path="/register" element={<RegisterPage />} />
         </Routes>
         </main>
@@ -93,7 +102,20 @@ class App extends React.Component {
     <div className="app-container">
       <header>
       <h1><Link to="/" style={{textDecoration: 'none'}}>Personal Notes Apps</Link></h1>
-      <Navigation />
+      <nav className='navigation'>
+      <ul>
+        <li>
+          <Link to='/archives' style={{textDecoration:'none'}}>Catatan Arsip</Link>
+        </li>
+        <li>
+          <Link to='/archives' style={{textDecoration:'none'}}>Tema</Link>
+        </li>
+        <li>
+          <Link to='/archives' style={{textDecoration:'none'}}>Bahasa</Link>
+        </li>
+        <li><button onClick={this.onLogout} className='button-logout'><FiLogOut />{this.state.authedUser.name} </button></li>
+      </ul>
+    </nav>
       </header>
       <main>
       <Routes>
