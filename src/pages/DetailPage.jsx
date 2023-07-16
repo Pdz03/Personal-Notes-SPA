@@ -97,49 +97,4 @@ function DetailPage (){
 );
 }
 
-// function DetailPageWrapper() {
-//   const { id } = useParams();
-//   const navigate = useNavigate();
-//   return <DetailPage id={id} navigate={navigate} />;
-// }
-
-// class DetailPage extends React.Component {
-//   constructor(props) {
-//     super(props);
-
-//     this.state = {
-//       note: null,
-//       initializing: true,
-//     };
-//     autoBind(this);
-//   }
-
-//   async componentDidMount() {
-//     const data  = await getNote(this.props.id);
-//     this.setState(() => {
-//       return {
-//         note: data,
-//         initializing: false,
-//       };
-//     });
-//   }
-
-//   render() {
-//     if (this.state.initializing) {
-//       return null;
-//     }
-    
-//     return (
-//       <section>
-//         <Detail {...this.state.note} onDelete={this.onDeleteHandler} onArchive={this.onArchiveHandler} onUnarchive={this.onUnarchiveHandler}/>
-//       </section>
-//     );
-//   }
-// }
-
-DetailPage.propTypes = {
-  id: PropTypes.string.isRequired,
-  navigate: PropTypes.func.isRequired,
-};
-
 export default DetailPage;

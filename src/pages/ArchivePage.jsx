@@ -5,62 +5,47 @@ import { getArchivedNotes } from '../utils/network-data';
 import SearchBar from '../components/SearchBar';
 import PropTypes from 'prop-types';
 
-function ArchivePageWrapper() {
-    const [searchParams, setSearchParams] = useSearchParams();
-    const keyword = searchParams.get('keyword') || '';
-    function changeSearchParams(keyword) {
-      setSearchParams({ keyword });
-    }
-   
-    return <ArchivePage defaultKeyword={keyword} keywordChange={changeSearchParams} />
-  }
- 
-class ArchivePage extends React.Component {
-  constructor(props) {
-    super(props);
- 
-    this.state = {
-        notes: getArchivedNotes(),
-        keyword: props.defaultKeyword || '',
-      }
-    this.onKeywordChangeHandler = this.onKeywordChangeHandler.bind(this);
-  }
+function ArchivePage() {
+  const [searchParams, setSearchParams] = useSearchParams();
+  const [notes, setNotes] = React.useState([]);
+  const [keyword, setKeyword] = React.useState(() => {
+    return searchParams.get('keyword') || ''
+  });
 
-
-  onKeywordChangeHandler(keyword) {
-    this.setState(() => {
-      return {
-        keyword,
-      }
+  React.useEffect(() => {
+    getArchivedNotes().then(({ data }) => {
+      setNotes(data);
     });
+  }, []);
 
-    this.props.keywordChange(keyword);
+  function onKeywordChangeHandler(keyword) {
+    setKeyword(keyword);
+    setSearchParams({ keyword });
   }
+
+  const filteredNotes = notes.filter((note) => {
+    return note.title.toLowerCase().includes(
+      keyword.toLowerCase()
+    );
+  });
  
-  render() {
-    const notes = this.state.notes;
-    const noteList = notes.filter((note) => {
-        return note.title.toLowerCase().includes(
-          this.state.keyword.toLowerCase()
-        );
-    });
-      
-    return (
+  return (
       <section>
-        <h2>Daftar Arsip Catatan</h2>
-        <SearchBar keyword={this.state.keyword} keywordChange={this.onKeywordChangeHandler} />
-        {noteList.length > 0 ? 
-        <NoteList notes={noteList} />
+        <h2>Daftar Catatan Aktif</h2>
+        <SearchBar keyword={keyword} keywordChange={onKeywordChangeHandler} />
+        {filteredNotes.length > 0 ? 
+        <NoteList notes={filteredNotes} />
         :<p className='notes-list-empty'>Tidak ada catatan</p>
       }
+      <div className='homepage__action'>
+      </div>
       </section>
-    )
-  }
+  );
 }
 
-ArchivePage.propTypes = {
-  defaultKeyword: PropTypes.string.isRequired,
+SearchBar.propTypes = {
+  keyword: PropTypes.string.isRequired,
   keywordChange: PropTypes.func.isRequired,
 };
  
-export default ArchivePageWrapper;
+export default ArchivePage;

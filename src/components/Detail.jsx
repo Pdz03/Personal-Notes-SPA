@@ -2,12 +2,12 @@ import PropTypes from 'prop-types';
 import { FaTrash } from 'react-icons/fa';
 import { BiSolidArchiveIn, BiSolidArchiveOut } from 'react-icons/bi'
 import { showFormattedDate } from '../utils/index';
-import parser from 'html-react-parser';
 
 function Detail({ id, title, body, createdAt, archived, onDelete, onArchive, onUnarchive }) {
   const formattedDate = showFormattedDate(createdAt);
 
   return (
+    <>
     <div className='section'>
       <div className='detail-page'>
         <h2 className='detail-page__title'>{title}</h2>
@@ -35,18 +35,10 @@ function Detail({ id, title, body, createdAt, archived, onDelete, onArchive, onU
         </div>
       </div>
     </div>
+    </>
   );
 }
 
-Detail.propTypes = {
-  id: PropTypes.string.isRequired,
-  title: PropTypes.string.isRequired,
-  body: PropTypes.string.isRequired,
-  createdAt: PropTypes.string.isRequired,
-  archived: PropTypes.bool.isRequired,
-  onDelete: PropTypes.func.isRequired,
-  onArchive: PropTypes.func.isRequired,
-  onUnarchive: PropTypes.func.isRequired,
-};
+
 
 export default Detail;

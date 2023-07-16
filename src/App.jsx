@@ -9,7 +9,11 @@ import LoginPage from './pages/LoginPage';
 import RegisterPage from './pages/RegisterPage';
 import { getUserLogged, putAccessToken } from './utils/network-data';
 import autoBind from 'auto-bind';
-import { FiLogOut } from 'react-icons/fi'
+import { FiLogOut } from 'react-icons/fi';
+import { FaSun, FaMoon} from 'react-icons/fa';
+import { BsTranslate } from 'react-icons/bs';
+import { ThemeProvider } from './contexts/ThemeContext';
+import ToggleTheme from './components/ToggleTheme';
 
 class App extends React.Component {
   constructor(props) {
@@ -18,6 +22,16 @@ class App extends React.Component {
     this.state = {
       authedUser: null,
       initializing: true,
+      theme: localStorage.getItem('theme') || 'light',
+      toggleTheme: () => {
+        this.setState((prevState) => {
+          const newTheme = prevState.theme === 'light' ? 'dark' : 'light';
+          localStorage.setItem('theme', newTheme);
+          return {
+            theme: newTheme
+          };
+        });
+      }
       // localeContext: {
       //   locale: localStorage.getItem('locale') || 'id',
       //   toggleLocale: () => {
@@ -56,6 +70,13 @@ class App extends React.Component {
         initializing: false
       }
     });
+    document.documentElement.setAttribute('data-theme', this.state.theme);
+  }
+
+  componentDidUpdate(prevProps, prevState) {
+    if (prevState.theme !== this.state.theme) {
+      document.documentElement.setAttribute('data-theme', this.state.theme);
+    }
   }
 
   onLogout() {
@@ -74,16 +95,17 @@ class App extends React.Component {
 
     if (this.state.authedUser === null) {
       return (
+        <ThemeProvider value={this.state}>
         <div className="app-container">
         <header>
         <h1><Link to="/" style={{textDecoration: 'none'}}>Personal Notes Apps</Link></h1>
         <nav className='navigation'>
         <ul>
           <li>
-            <Link to='/archives' style={{textDecoration:'none'}}>Tema</Link>
+            <ToggleTheme />
           </li>
           <li>
-            <Link to='/archives' style={{textDecoration:'none'}}>Bahasa</Link>
+            <Link className='toggle-locale' to='/archives' style={{textDecoration:'none'}}><BsTranslate /></Link>
           </li>
         </ul>
         </nav>
@@ -95,6 +117,7 @@ class App extends React.Component {
         </Routes>
         </main>
       </div>
+      </ThemeProvider>
       )
     }
 
@@ -108,10 +131,10 @@ class App extends React.Component {
           <Link to='/archives' style={{textDecoration:'none'}}>Catatan Arsip</Link>
         </li>
         <li>
-          <Link to='/archives' style={{textDecoration:'none'}}>Tema</Link>
+          <ToggleTheme />  
         </li>
         <li>
-          <Link to='/archives' style={{textDecoration:'none'}}>Bahasa</Link>
+          <Link className='toggle-locale' to='/archives' style={{textDecoration:'none'}}><BsTranslate /></Link>
         </li>
         <li><button onClick={this.onLogout} className='button-logout'><FiLogOut />{this.state.authedUser.name} </button></li>
       </ul>
