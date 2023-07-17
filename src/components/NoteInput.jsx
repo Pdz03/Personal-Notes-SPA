@@ -11,13 +11,6 @@ function NoteInput ({ addNote }){
 
   const { locale } = React.useContext(LocaleContext);
 
-  // function onBodyChangeEventHandler(event) {
-  //   event.preventDefault();
-  //   return{
-  //   body : event.target.innerHTML
-  //  }
-  // }
-
   function onSubmitEventHandler(event) {
     event.preventDefault();
 

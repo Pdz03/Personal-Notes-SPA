@@ -5,6 +5,7 @@ import { BiSolidArchiveIn, BiSolidArchiveOut } from 'react-icons/bi'
 import { showFormattedDate } from '../utils/index';
 import LocaleContext from '../contexts/LocaleContexts';
 
+
 function Detail({ id, title, body, createdAt, archived, onDelete, onArchive, onUnarchive }) {
   const { locale } = React.useContext(LocaleContext);
 
@@ -23,7 +24,7 @@ function Detail({ id, title, body, createdAt, archived, onDelete, onArchive, onU
       <div className='detail-page'>
         <h2 className='detail-page__title'>{title}</h2>
         <p className='detail-page__createdAt'>{formattedDate}</p>
-        <p className='detail-page__body'>{body}</p>
+        <p className='detail-page__body' dangerouslySetInnerHTML={{ __html: body }} />
         {archived ? 
         <p className='detail-page__status'>Status : {locale === 'id' ? 'Catatan Diarsipkan' : 'Archived Note'}</p>
         :
@@ -50,6 +51,15 @@ function Detail({ id, title, body, createdAt, archived, onDelete, onArchive, onU
   );
 }
 
-
+Detail.propTypes = {
+  id: PropTypes.string.isRequired,
+  title: PropTypes.string.isRequired,
+  body: PropTypes.string.isRequired,
+  createdAt: PropTypes.string.isRequired,
+  archived: PropTypes.bool.isRequired,
+  onDelete: PropTypes.func.isRequired,
+  onArchive: PropTypes.func.isRequired,
+  onUnarchive: PropTypes.func.isRequired,
+};
 
 export default Detail;

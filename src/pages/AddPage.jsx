@@ -9,7 +9,7 @@ function AddPage() {
   const navigate = useNavigate();
   const { locale } = React.useContext(LocaleContext);
 
-  let title = '';
+  let titletext = '';
   let text = '';
   let confirm1 = '';
   let confirm2 = '';
@@ -17,14 +17,14 @@ function AddPage() {
   let buttonconfirm = '';
 
   if (locale === 'id'){
-    title = 'Apakah anda yakin?';
+    titletext = 'Apakah anda yakin?';
     text = 'Anda akan menambahkan catatan ini!';
     buttonconfirm = 'Ya, tambahkan!';
     buttoncancel = 'Batal';
     confirm1 = 'Ditambahkan!';
     confirm2 = 'Catatan anda telah ditambahkan';
   }else{
-    title = 'Are you sure?';
+    titletext = 'Are you sure?';
     text = 'You will add this note!';
     buttonconfirm = 'Yes, add it!';
     buttoncancel = 'Cancel';
@@ -34,7 +34,7 @@ function AddPage() {
 
   function onAddNoteHandler({ title, body }) {
     Swal.fire({
-      title: title,
+      title: titletext,
       text: text,
       icon: 'warning',
       showCancelButton: true,

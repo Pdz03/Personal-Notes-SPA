@@ -5,8 +5,10 @@ import { getArchivedNotes } from '../utils/network-data';
 import SearchBar from '../components/SearchBar';
 import PropTypes from 'prop-types';
 import LocaleContext from '../contexts/LocaleContexts';
+import PageLoader from '../components/PageLoader';
 
 function ArchivePage() {
+  const [isLoading, setIsLoading] = React.useState(false);
   const [searchParams, setSearchParams] = useSearchParams();
   const [notes, setNotes] = React.useState([]);
   const [keyword, setKeyword] = React.useState(() => {
@@ -15,9 +17,13 @@ function ArchivePage() {
   const { locale } = React.useContext(LocaleContext);
 
   React.useEffect(() => {
-    getArchivedNotes().then(({ data }) => {
-      setNotes(data);
-    });
+    setIsLoading(true);
+    setTimeout(() => {
+      getArchivedNotes().then(({ data }) => {
+        setNotes(data);
+        setIsLoading(false);
+      });
+    }, 500);
   }, []);
 
   function onKeywordChangeHandler(keyword) {
@@ -30,15 +36,21 @@ function ArchivePage() {
       keyword.toLowerCase()
     );
   });
+
+  const showFilteredNotes =  (
+    <>
+    {filteredNotes.length > 0 ?
+    <NoteList notes={filteredNotes} />
+    :<p className='notes-list-empty'>{locale === 'id' ? 'Tidak ada catatan' : 'Empty note'}</p>
+    }
+    </>
+  )
  
   return (
       <section>
         <h2>{locale === 'id' ? 'Daftar Catatan Arsip' : 'Archived Note List'}</h2>
         <SearchBar keyword={keyword} keywordChange={onKeywordChangeHandler} />
-        {filteredNotes.length > 0 ? 
-        <NoteList notes={filteredNotes} />
-        :<p className='notes-list-empty'>{locale === 'id' ? 'Tidak ada catatan' : 'Empty note'}</p>
-      }
+        {isLoading ? <PageLoader /> : showFilteredNotes }
       <div className='homepage__action'>
       </div>
       </section>

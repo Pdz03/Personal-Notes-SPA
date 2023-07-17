@@ -6,8 +6,10 @@ import SearchBar from '../components/SearchBar';
 import AddButton from '../components/AddButton';
 import PropTypes from 'prop-types';
 import LocaleContext from '../contexts/LocaleContexts';
+import PageLoader from '../components/PageLoader';
 
 function HomePage() {
+  const [isLoading, setIsLoading] = React.useState(false);
   const [searchParams, setSearchParams] = useSearchParams();
   const [notes, setNotes] = React.useState([]);
   const [keyword, setKeyword] = React.useState(() => {
@@ -16,9 +18,13 @@ function HomePage() {
   const { locale } = React.useContext(LocaleContext);
 
   React.useEffect(() => {
-    getActiveNotes().then(({ data }) => {
-      setNotes(data);
-    });
+    setIsLoading(true);
+    setTimeout(() => {
+      getActiveNotes().then(({ data }) => {
+        setNotes(data);
+        setIsLoading(false);
+      });
+    }, 500);
   }, []);
 
   function onKeywordChangeHandler(keyword) {
@@ -31,15 +37,21 @@ function HomePage() {
       keyword.toLowerCase()
     );
   });
+
+  const showFilteredNotes =  (
+    <>
+    {filteredNotes.length > 0 ?
+    <NoteList notes={filteredNotes} />
+    :<p className='notes-list-empty'>{locale === 'id' ? 'Tidak ada catatan' : 'Empty note'}</p>
+    }
+    </>
+  )
  
   return (
       <section>
         <h2>{locale === 'id' ? 'Daftar Catatan Aktif' : 'Active Note List'}</h2>
         <SearchBar keyword={keyword} keywordChange={onKeywordChangeHandler} />
-        {filteredNotes.length > 0 ? 
-        <NoteList notes={filteredNotes} />
-        :<p className='notes-list-empty'>{locale === 'id' ? 'Tidak ada catatan' : 'Empty note'}</p>
-      }
+        {isLoading ? <PageLoader /> : showFilteredNotes }
       <div className='homepage__action'>
       <AddButton />
       </div>

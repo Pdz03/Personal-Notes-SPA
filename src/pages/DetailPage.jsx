@@ -1,20 +1,20 @@
 import React from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
-import PropTypes from 'prop-types';
 import Detail from '../components/Detail';
 import { getNote, deleteNote, archiveNote, unarchiveNote } from '../utils/network-data';
 import Swal from 'sweetalert2';
 import LocaleContext from '../contexts/LocaleContexts';
-// import NoteDetailEmpty from '../components/DetailNote/NoteDetailEmpty';
+import PageLoader from '../components/PageLoader';
 
 function DetailPage (){
+  const [isLoading, setIsLoading] = React.useState(false);
   const { id } = useParams();
   const navigate = useNavigate();
   const [notes, setNote] = React.useState(null);
 
   const { locale } = React.useContext(LocaleContext);
 
-  let title = '';
+  let titletext = '';
   let text = '';
   let confirm1 = '';
   let confirm2 = '';
@@ -22,22 +22,26 @@ function DetailPage (){
   let buttonconfirm = '';
 
   React.useEffect(() => {
-    (async () => {
-      const { data } = await getNote(id);
-      setNote(data);
-    })();
+    setIsLoading(true);
+    setTimeout(() => {
+      (async () => {
+        const { data } = await getNote(id);
+        setNote(data);
+        setIsLoading(false);
+      })();
+    }, 500);
   }, [id]);
 
   const onDeleteHandler = async(id) => {
     if (locale === 'id'){
-      title = 'Apakah anda yakin?';
+      titletext = 'Apakah anda yakin?';
       text = 'Anda akan menghapus catatan ini!';
       buttonconfirm = 'Ya, hapus!';
       buttoncancel = 'Batal';
       confirm1 = 'Terhapus!';
       confirm2 = 'Catatan anda telah dihapus';
     }else{
-      title = 'Are you sure?';
+      titletext = 'Are you sure?';
       text = 'You will delete this note!';
       buttonconfirm = 'Yes, delete it!';
       buttoncancel = 'Cancel';
@@ -46,7 +50,7 @@ function DetailPage (){
     }
 
     await Swal.fire({
-      title: title,
+      title: titletext,
       text: text,
       icon: 'warning',
       showCancelButton: true,
@@ -69,14 +73,14 @@ function DetailPage (){
 
   const onArchiveHandler = async(id) => {
     if (locale === 'id'){
-      title = 'Apakah anda yakin?';
+      titletext = 'Apakah anda yakin?';
       text = 'Anda akan mengarsipkan catatan ini!';
       buttonconfirm = 'Ya, arsipkan!';
       buttoncancel = 'Batal';
       confirm1 = 'Terarsip!';
       confirm2 = 'Catatan anda telah diarsipkan';
     }else{
-      title = 'Are you sure?';
+      titletext = 'Are you sure?';
       text = 'You will archive this note!';
       buttonconfirm = 'Yes, archive it!';
       buttoncancel = 'Cancel';
@@ -85,7 +89,7 @@ function DetailPage (){
     }
 
     await Swal.fire({
-      title: title,
+      title: titletext,
       text: text,
       icon: 'warning',
       showCancelButton: true,
@@ -108,14 +112,14 @@ function DetailPage (){
 
   const onUnarchiveHandler = async(id) => {
     if (locale === 'id'){
-      title = 'Apakah anda yakin?';
+      titletext = 'Apakah anda yakin?';
       text = 'Anda akan membuka arsip catatan ini!';
       buttonconfirm = 'Ya, buka!';
       buttoncancel = 'Batal';
       confirm1 = 'Terbuka!';
       confirm2 = 'Arsip catatan anda telah terbuka';
     }else{
-      title = 'Are you sure?';
+      titletext = 'Are you sure?';
       text = 'You will open this archived note!';
       buttonconfirm = 'Yes, open it!';
       buttoncancel = 'Cancel';
@@ -124,7 +128,7 @@ function DetailPage (){
     }
 
     await Swal.fire({
-      title: title,
+      title: titletext,
       text: text,
       icon: 'warning',
       showCancelButton: true,
@@ -147,10 +151,12 @@ function DetailPage (){
 
   return (
     <section>
-      <Detail {...notes} 
-      onDelete={onDeleteHandler} 
-      onArchive={onArchiveHandler} 
-      onUnarchive={onUnarchiveHandler}/>
+      {isLoading ? <PageLoader /> : 
+        <Detail {...notes} 
+        onDelete={onDeleteHandler} 
+        onArchive={onArchiveHandler} 
+        onUnarchive={onUnarchiveHandler}/>
+      }
     </section>
 );
 }
