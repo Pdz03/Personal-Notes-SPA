@@ -5,6 +5,7 @@ import { getActiveNotes } from '../utils/network-data';
 import SearchBar from '../components/SearchBar';
 import AddButton from '../components/AddButton';
 import PropTypes from 'prop-types';
+import LocaleContext from '../contexts/LocaleContexts';
 
 function HomePage() {
   const [searchParams, setSearchParams] = useSearchParams();
@@ -12,6 +13,7 @@ function HomePage() {
   const [keyword, setKeyword] = React.useState(() => {
     return searchParams.get('keyword') || ''
   });
+  const { locale } = React.useContext(LocaleContext);
 
   React.useEffect(() => {
     getActiveNotes().then(({ data }) => {
@@ -32,11 +34,11 @@ function HomePage() {
  
   return (
       <section>
-        <h2>Daftar Catatan Aktif</h2>
+        <h2>{locale === 'id' ? 'Daftar Catatan Aktif' : 'Active Note List'}</h2>
         <SearchBar keyword={keyword} keywordChange={onKeywordChangeHandler} />
         {filteredNotes.length > 0 ? 
         <NoteList notes={filteredNotes} />
-        :<p className='notes-list-empty'>Tidak ada catatan</p>
+        :<p className='notes-list-empty'>{locale === 'id' ? 'Tidak ada catatan' : 'Empty note'}</p>
       }
       <div className='homepage__action'>
       <AddButton />

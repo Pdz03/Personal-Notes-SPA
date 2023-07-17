@@ -10,10 +10,10 @@ import RegisterPage from './pages/RegisterPage';
 import { getUserLogged, putAccessToken } from './utils/network-data';
 import autoBind from 'auto-bind';
 import { FiLogOut } from 'react-icons/fi';
-import { FaSun, FaMoon} from 'react-icons/fa';
-import { BsTranslate } from 'react-icons/bs';
 import { ThemeProvider } from './contexts/ThemeContext';
+import { LocaleProvider } from './contexts/LocaleContexts';
 import ToggleTheme from './components/ToggleTheme';
+import ToggleLocale from './components/ToggleLocale';
 
 class App extends React.Component {
   constructor(props) {
@@ -31,22 +31,22 @@ class App extends React.Component {
             theme: newTheme
           };
         });
+      },
+      localeContext: {
+        locale: localStorage.getItem('lang') || 'id',
+        toggleLocale: () => {
+          this.setState((prevState) => {
+            const newLocale = prevState.localeContext.locale === 'id' ? 'en' : 'id';
+            localStorage.setItem('lang', newLocale);
+            return {
+              localeContext: {
+                ...prevState.localeContext,
+                locale: newLocale
+              }
+            }
+          });
+        }
       }
-      // localeContext: {
-      //   locale: localStorage.getItem('locale') || 'id',
-      //   toggleLocale: () => {
-      //     this.setState((prevState) => {
-      //       const newLocale = prevState.localeContext.locale === 'id' ? 'en' : 'id';
-      //       localStorage.setItem('locale', newLocale);
-      //       return {
-      //         localeContext: {
-      //           ...prevState.localeContext,
-      //           locale: newLocale
-      //         }
-      //       }
-      //     });
-      //   }
-      // }
     };
 
     autoBind(this);
@@ -95,17 +95,20 @@ class App extends React.Component {
 
     if (this.state.authedUser === null) {
       return (
+        <LocaleProvider value={this.state.localeContext}>
         <ThemeProvider value={this.state}>
         <div className="app-container">
         <header>
-        <h1><Link to="/" style={{textDecoration: 'none'}}>Personal Notes Apps</Link></h1>
+        <h1><Link to="/" style={{textDecoration: 'none'}}>
+          {this.state.localeContext.locale === 'id' ? 'Aplikasi Catatan Pribadi' : 'Personal Notes Apps'}
+          </Link></h1>
         <nav className='navigation'>
         <ul>
           <li>
             <ToggleTheme />
           </li>
           <li>
-            <Link className='toggle-locale' to='/archives' style={{textDecoration:'none'}}><BsTranslate /></Link>
+            <ToggleLocale />
           </li>
         </ul>
         </nav>
@@ -118,23 +121,26 @@ class App extends React.Component {
         </main>
       </div>
       </ThemeProvider>
+      </LocaleProvider>
       )
     }
 
   return (
+    <LocaleProvider value={this.state.localeContext}>
+    <ThemeProvider value={this.state}>
     <div className="app-container">
       <header>
-      <h1><Link to="/" style={{textDecoration: 'none'}}>Personal Notes Apps</Link></h1>
+      <h1><Link to="/" style={{textDecoration: 'none'}}>{this.state.localeContext.locale === 'id' ? 'Aplikasi Catatan Pribadi' : 'Personal Notes Apps'}</Link></h1>
       <nav className='navigation'>
       <ul>
         <li>
-          <Link to='/archives' style={{textDecoration:'none'}}>Catatan Arsip</Link>
+          <Link to='/archives' style={{textDecoration:'none'}}>{this.state.localeContext.locale === 'id' ? 'Catatan Arsip' : 'Archived Notes'}</Link>
         </li>
         <li>
           <ToggleTheme />  
         </li>
         <li>
-          <Link className='toggle-locale' to='/archives' style={{textDecoration:'none'}}><BsTranslate /></Link>
+          <ToggleLocale />
         </li>
         <li><button onClick={this.onLogout} className='button-logout'><FiLogOut />{this.state.authedUser.name} </button></li>
       </ul>
@@ -149,6 +155,8 @@ class App extends React.Component {
       </Routes>
       </main>
     </div>
+    </ThemeProvider>
+    </LocaleProvider>
   );
   }
 }

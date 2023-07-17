@@ -1,64 +1,54 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import autoBind from 'auto-bind';
 import { BiSolidCheckCircle } from 'react-icons/bi';
+import LocaleContext from '../contexts/LocaleContexts';
+import useInput from '../hooks/useInput';
+import useInputHTML from '../hooks/useInputHTML';
 
-class NoteInput extends React.Component {
-  constructor(props) {
-    super(props);
+function NoteInput ({ addNote }){
+  const [title, onTitleChangeEventHandler] = useInput('');
+  const [body, onBodyChangeEventHandler] = useInputHTML('');
 
-    // inisialisasi state
-    this.state = {
-      title: '',
-      body: '',
-    }
+  const { locale } = React.useContext(LocaleContext);
 
-    autoBind(this);
-  }
+  // function onBodyChangeEventHandler(event) {
+  //   event.preventDefault();
+  //   return{
+  //   body : event.target.innerHTML
+  //  }
+  // }
 
-  onTitleChangeEventHandler(event) {
-    this.setState(() => {
-      return {
-        title: event.target.value,
-      }
-    });
-  }
-
-  onBodyChangeEventHandler(event) {
-    this.setState(() => {
-      return {
-        body: event.target.innerHTML,
-      }
-    });
-  }
-
-  onSubmitEventHandler(event) {
+  function onSubmitEventHandler(event) {
     event.preventDefault();
-    this.props.addNote(this.state);
+
+    console.log(body);
+
+    addNote({ 
+      title : title,
+      body : body,
+    });
   }
 
-  render() {
-   return (
-     <form onSubmit={this.onSubmitEventHandler}>
-        <div className='add-new-page__input'>
-        <input
-          className='add-new-page__input__title'
-          placeholder='Catatan Rahasia'
-          onChange={this.onTitleChangeEventHandler}
-        />
-       <div
-          className='add-new-page__input__body'
-          data-placeholder='Sebenarnya saya adalah ....'
-          onInput={this.onBodyChangeEventHandler}
-          contentEditable
-        />
-        </div>
-        <div className='add-new-page__action'>
-       <button type='submit' className='action'><BiSolidCheckCircle /></button>
+  return (
+    <form onSubmit={onSubmitEventHandler}>
+       <div className='add-new-page__input'>
+       <input
+         className='add-new-page__input__title'
+         placeholder={locale === 'id' ? 'Catatan Rahasia' : 'Secret Note'}
+         onChange={onTitleChangeEventHandler}
+       />
+      <div
+         className='add-new-page__input__body'
+         data-placeholder={locale === 'id' ? 'Isi catatan ...' : 'Note content ...'}
+         onInput={onBodyChangeEventHandler}
+         contentEditable
+       />
        </div>
-     </form>
-   )
- }
+       <div className='add-new-page__action'>
+      <button type='submit' className='action'><BiSolidCheckCircle /></button>
+      </div>
+    </form>
+  )
 }
 
 NoteInput.propTypes = {

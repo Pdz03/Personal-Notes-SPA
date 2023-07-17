@@ -1,10 +1,21 @@
 import PropTypes from 'prop-types';
+import React from 'react';
 import { FaTrash } from 'react-icons/fa';
 import { BiSolidArchiveIn, BiSolidArchiveOut } from 'react-icons/bi'
 import { showFormattedDate } from '../utils/index';
+import LocaleContext from '../contexts/LocaleContexts';
 
 function Detail({ id, title, body, createdAt, archived, onDelete, onArchive, onUnarchive }) {
-  const formattedDate = showFormattedDate(createdAt);
+  const { locale } = React.useContext(LocaleContext);
+
+  let lang = '';
+  if (locale === 'id'){
+    lang = 'id-ID';
+  }else{
+    lang = 'en-EN';
+  }
+
+  const formattedDate = showFormattedDate(createdAt, lang);
 
   return (
     <>
@@ -14,9 +25,9 @@ function Detail({ id, title, body, createdAt, archived, onDelete, onArchive, onU
         <p className='detail-page__createdAt'>{formattedDate}</p>
         <p className='detail-page__body'>{body}</p>
         {archived ? 
-        <p className='detail-page__status'>Status : Catatan Diarsipkan</p>
+        <p className='detail-page__status'>Status : {locale === 'id' ? 'Catatan Diarsipkan' : 'Archived Note'}</p>
         :
-        <p className='detail-page__status'>Status : Catatan Aktif</p>
+        <p className='detail-page__status'>Status : {locale === 'id' ? 'Catatan Aktif' : 'Active Note'}</p>
         }
         
         <div className='detail-page__action'>
